@@ -37,11 +37,11 @@ int main()
 	for(int jj=0;jj<1000000;jj++)
 	{
 		for(int i=0;i<10;i++)
-			{
-	        	phonecell=iseed[rand()%10];
-	        	sprintf(add,"%d",phonecell);
-	        	strcat(phone,add);
-	        }
+		{
+			phonecell=iseed[rand()%10];
+	        sprintf(add,"%d",phonecell);
+	        strcat(phone,add);
+		}
 		memcpy(phonepack[jj].phonebook,phone,10);
 	    //phonepack[jj].phonebook=atoll(phone);
 	    memset(phone, 0, sizeof(phone));
