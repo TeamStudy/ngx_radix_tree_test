@@ -39,12 +39,12 @@ int main()
 		for(int i=0;i<10;i++)
 		{
 			phonecell=iseed[rand()%10];
-	        sprintf(add,"%d",phonecell);
-	        strcat(phone,add);
+			sprintf(add,"%d",phonecell);
+			strcat(phone,add);
 		}
 		memcpy(phonepack[jj].phonebook,phone,10);
 	    //phonepack[jj].phonebook=atoll(phone);
-	    memset(phone, 0, sizeof(phone));
+		memset(phone, 0, sizeof(phone));
 	    //sprintf(phone,"%d",z);
 	}
 	/*输出前50个看看*/
