@@ -105,7 +105,7 @@ int main()
 						key2->temp=localtemp;
 						memset(key2->temp, 0, sizeof(key2->temp));
 						key2->temp[0]=phonepack[num].phonebook;
-						//printf("first creat list\n");
+						//printf("first create list\n");
 					}
 					else
 					{
@@ -116,7 +116,7 @@ int main()
 						}
 						key2->temp[x]=phonepack[num].phonebook;
 						phonepack[num].state++;
-						//printf("%d creat list\n",x);
+						//printf("%d create list\n",x);
 					}
 				}
 				continue;
