@@ -32,15 +32,15 @@ using namespace __gnu_cxx;
 
 static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
 
-ngx_radix_tree_t * ngx_palloc1(int *pool, int size)
+ngx_radix_tree_t * ngx_palloc1(BUFF_NODE *pool, int size)
 {
 	ngx_radix_tree_t * temp=(ngx_radix_tree_t *)malloc(sizeof(ngx_radix_tree_t) );;
 
 	return temp;
 }
-ngx_radix_tree_t * ngx_radix_tree_create(int *pool, int preallocate)
+ngx_radix_tree_t * ngx_radix_tree_create(BUFF_NODE *pool, int preallocate)
 {
-    unsigned int           key, mask, inc;
+	ngx_uint_t           key, mask, inc;
     ngx_radix_tree_t  *tree;
 
     tree = ngx_palloc1(pool, sizeof(ngx_radix_tree_t));
@@ -120,11 +120,12 @@ ngx_radix_tree_t * ngx_radix_tree_create(int *pool, int preallocate)
 }
 
 
-int ngx_radix32tree_insert(ngx_radix_tree_t *tree, unsigned int key, unsigned int mask, unsigned int* value)
+int ngx_radix32tree_insert(ngx_radix_tree_t *tree, ngx_uint_t key, ngx_uint_t mask, ngx_uint_ptr_t value)
 {
-    unsigned int           bit;
+	ngx_uint_t           bit;
+    static int renum=1;
     ngx_radix_node_t  *node, *next;
-
+    PHONE* phone_key=(PHONE*)value;
     bit = 0x00000001;
 
     node = tree->root;
@@ -154,7 +155,28 @@ int ngx_radix32tree_insert(ngx_radix_tree_t *tree, unsigned int key, unsigned in
     {
         if (node->value != NGX_RADIX_NO_VALUE)
         {
-            return NGX_BUSY;
+        	printf("repeat!  num:%d  phone:%lld\n",renum,phone_key->phonebook);
+        	renum++;
+        	unsigned int* key1=ngx_radix32tree_find(tree, key);
+        	PHONE* key2=(PHONE*)key1;
+        	if(key2->list==NULL)
+        	{
+        		PHONE* local_temp1=(PHONE* )malloc(sizeof(PHONE));
+        		local_temp1->list=NULL;
+        		local_temp1->phonebook=0;
+        		key2->list=local_temp1;
+        		key2->list=phone_key;
+        		//printf("first create list\n");
+        	}
+        	else if(key2->list->list==NULL)
+        	{
+        		PHONE* local_temp2=(PHONE* )malloc(sizeof(PHONE));
+        		key2->list->list=local_temp2;
+        		key2->list->list =phone_key;
+        		//printf("second create list\n");
+        	}
+        	return NGX_OK;
+
         }
 
         node->value = value;
@@ -194,9 +216,9 @@ int ngx_radix32tree_insert(ngx_radix_tree_t *tree, unsigned int key, unsigned in
 }
 
 
-int ngx_radix32tree_delete(ngx_radix_tree_t *tree, unsigned int key, unsigned int mask)
+int ngx_radix32tree_delete(ngx_radix_tree_t *tree, ngx_uint_t key, ngx_uint_t mask)
 {
-    unsigned int           bit;
+	ngx_uint_t           bit;
     ngx_radix_node_t  *node;
 
     bit = 0x00000001;
@@ -256,10 +278,10 @@ int ngx_radix32tree_delete(ngx_radix_tree_t *tree, unsigned int key, unsigned in
 }
 
 
-unsigned int* ngx_radix32tree_find(ngx_radix_tree_t *tree, unsigned int key)
+ngx_uint_ptr_t ngx_radix32tree_find(ngx_radix_tree_t *tree, ngx_uint_t key)
 {
-    unsigned int           bit;
-    unsigned int*          value;
+	ngx_uint_t           bit;
+	ngx_uint_ptr_t          value;
     ngx_radix_node_t  *node;
 
     bit = 0x00000001;
