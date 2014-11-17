@@ -161,17 +161,13 @@ int ngx_radix32tree_insert(ngx_radix_tree_t *tree, ngx_uint_t key, ngx_uint_t ma
         	PHONE* key2=(PHONE*)key1;
         	if(key2->list==NULL)
         	{
-        		PHONE* local_temp1=(PHONE* )malloc(sizeof(PHONE));
-        		local_temp1->list=NULL;
-        		local_temp1->phonebook=0;
-        		key2->list=local_temp1;
+        		key2->list=(PHONE* )malloc(sizeof(PHONE));
         		key2->list=phone_key;
         		//printf("first create list\n");
         	}
         	else if(key2->list->list==NULL)
         	{
-        		PHONE* local_temp2=(PHONE* )malloc(sizeof(PHONE));
-        		key2->list->list=local_temp2;
+        		key2->list->list=(PHONE* )malloc(sizeof(PHONE));
         		key2->list->list =phone_key;
         		//printf("second create list\n");
         	}
