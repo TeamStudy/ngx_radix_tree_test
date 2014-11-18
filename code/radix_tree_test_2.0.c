@@ -12,17 +12,22 @@
 using namespace __gnu_cxx;
 
 PHONE *phonepack=NULL;
+
 int secondsold, secondsnew, second;
 int minisecondsold,minisecondsnew,minisecond;
 struct timeval t;
+
 ngx_radix_tree_t * radixTree = NULL;
+
+hash_map<int,int> phonemap;
+pair< hash_map< int,int >::iterator,bool > ret;
 
 void test_init()
 {
 	/*生成1之后10位随机数字*/
 
 	int iseed[10]={0,1,2,3,4,5,6,7,8,9};
-	for(int j=0;j<MILLION;j++)
+	for(int j=0;j<TOTAL_TEST;j++)
 	{
 		phonepack[j].phonebook=0;
 		phonepack[j].list=NULL;
@@ -34,7 +39,7 @@ void test_init()
 	memset(phone, 0, sizeof(phone));
 	//int z=1;
 	srand((unsigned)time(NULL));
-	for(int jj=0;jj<MILLION;jj++)
+	for(int jj=0;jj<TOTAL_TEST;jj++)
 	{
 		for(int i=0;i<10;i++)
 		{
@@ -86,7 +91,7 @@ void time_end()
 void test_radix32tree()
 {
 	int err=0;
-	for(int num=0;num<MILLION;num++)
+	for(int num=0;num<TOTAL_TEST;num++)
 	{
 		if((num+1)%HUNDRED_THOUSAND==0)
 		{
@@ -125,8 +130,6 @@ int main()
 
 	phonepack=(PHONE *)malloc(sizeof(PHONE )*MILLION);
 	test_init();//初始化测试数组
-	hash_map<int,int> phonemap;
-	pair< hash_map< int,int >::iterator,bool > ret;
 
 	BUFF_NODE *pool=NULL;
 	radixTree=ngx_radix_tree_create(pool,-1);

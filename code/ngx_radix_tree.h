@@ -27,7 +27,7 @@
 #define MASK_8	0x0fffffff	/*8位数：0x0fffffff*/
 #define MASK_9	0xffffffff	/*9位数：0xffffffff*/
 #define MASK_10	0xffffffff	/*10位数：1000000000~4294967295：0xffffffff*/
-#define MILLION 1000000
+#define TOTAL_TEST 1000000
 #define HUNDRED_THOUSAND 100000
 #define INT_MAX 4200000000UL
 
