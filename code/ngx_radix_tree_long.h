@@ -11,16 +11,16 @@
 
 
 //掩码定义
-#define MASK_LONG_1		0x000000000000000fLL		/*1位数*/
-#define MASK_LONG_2		0x00000000000000ffLL		/*2位数*/
-#define MASK_LONG_3		0x0000000000000fffLL		/*3位数*/
-#define MASK_LONG_4		0x000000000000ffffLL		/*4位数*/
-#define MASK_LONG_5		0x000000000000ffffLL		/*5位数*/
-#define MASK_LONG_6		0x00000000000fffffLL		/*6位数*/
-#define MASK_LONG_7		0x0000000000ffffffLL		/*7位数*/
-#define MASK_LONG_8		0x000000000fffffffLL		/*8位数*/
-#define MASK_LONG_9		0x00000000ffffffffLL		/*9位数*/
-#define MASK_LONG_10	0x0000000fffffffffLL		/*10位数*/
+#define MASK_LONG_1    0x000000000000000fULL		/*1位数*/
+#define MASK_LONG_2    0x00000000000000ffULL		/*2位数*/
+#define MASK_LONG_3    0x0000000000000fffULL		/*3位数*/
+#define MASK_LONG_4    0x000000000000ffffULL		/*4位数*/
+#define MASK_LONG_5    0x000000000000ffffULL		/*5位数*/
+#define MASK_LONG_6    0x00000000000fffffULL		/*6位数*/
+#define MASK_LONG_7    0x0000000000ffffffULL		/*7位数*/
+#define MASK_LONG_8    0x000000000fffffffULL		/*8位数*/
+#define MASK_LONG_9    0x00000000ffffffffULL		/*9位数*/
+#define MASK_LONG_10   0x0000000fffffffffULL		/*10位数*/
 
 typedef unsigned long long ngx_64_int;
 
