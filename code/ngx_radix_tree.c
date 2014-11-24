@@ -30,7 +30,7 @@ using namespace __gnu_cxx;
 //using namespace std;
 
 
-static ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
+
 
 ngx_radix_tree_t * ngx_palloc1(BUFF_NODE *pool, int size)
 {
@@ -124,6 +124,7 @@ int ngx_radix32tree_insert(ngx_radix_tree_t *tree, ngx_uint_t key, ngx_uint_t ma
 {
 	ngx_uint_t           bit;
     static int renum=1;
+    static int re=1;
     ngx_radix_node_t  *node, *next;
     PHONE* phone_key=(PHONE*)value;
     bit = 0x00000001;
@@ -155,24 +156,33 @@ int ngx_radix32tree_insert(ngx_radix_tree_t *tree, ngx_uint_t key, ngx_uint_t ma
     {
         if (node->value != NGX_RADIX_NO_VALUE)
         {
-        	printf("repeat!  num:%d  phone:%lld\n",renum,phone_key->phonebook);
-        	renum++;
         	unsigned int* key1=ngx_radix32tree_find(tree, key);
         	PHONE* key2=(PHONE*)key1;
-        	if(key2->list==NULL)
+        	//printf("last num:%lld\n",key2->phonebook);
+        	if(key2->phonebook==phone_key->phonebook)
         	{
-        		key2->list=(PHONE* )malloc(sizeof(PHONE));
-        		key2->list=phone_key;
-        		//printf("first create list\n");
+        		printf("repeat phone! num:%d \n",re);
+        		re++;
+        		return NGX_OK;
         	}
-        	else if(key2->list->list==NULL)
+        	else
         	{
-        		key2->list->list=(PHONE* )malloc(sizeof(PHONE));
-        		key2->list->list =phone_key;
-        		//printf("second create list\n");
+        		printf("repeat!  num:%d  phone:%lld\n",renum,phone_key->phonebook);
+        		renum++;
+        		if(key2->list==NULL)
+        		{
+        			key2->list=(PHONE* )malloc(sizeof(PHONE));
+        			key2->list=phone_key;
+        			//printf("first create list\n");
+        		}
+        		else if(key2->list->list==NULL)
+        		{
+        			key2->list->list=(PHONE* )malloc(sizeof(PHONE));
+        			key2->list->list =phone_key;
+        			//printf("second create list\n");
+        		}
+        		return NGX_OK;
         	}
-        	return NGX_OK;
-
         }
 
         node->value = value;
@@ -501,7 +511,7 @@ ngx_radix128tree_find(ngx_radix_tree_t *tree, u_char *key)
 
 
 
-static ngx_radix_node_t * ngx_radix_alloc(ngx_radix_tree_t *tree)
+ ngx_radix_node_t * ngx_radix_alloc(ngx_radix_tree_t *tree)
 {
     ngx_radix_node_t  *p;
     p=(ngx_radix_node_t *)malloc(sizeof(ngx_radix_node_t));

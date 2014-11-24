@@ -29,7 +29,7 @@
 #define MASK_10	0xffffffff	/*10Î»Êý£º1000000000~4294967295£º0xffffffff*/
 #define TOTAL_TEST 1000000
 #define HUNDRED_THOUSAND 100000
-#define INT_MAX 4200000000UL
+#define MY_INT_MAX 4200000000U
 
 
 #define  NGX_OK          0
@@ -77,7 +77,8 @@ typedef struct {
     char              *start;
     ngx_uint_t             size;
 } ngx_radix_tree_t;
-
+ngx_radix_node_t *ngx_radix_alloc(ngx_radix_tree_t *tree);
+ngx_radix_tree_t * ngx_palloc1(BUFF_NODE *pool, int size);
 
 ngx_radix_tree_t *ngx_radix_tree_create(BUFF_NODE *pool,
     ngx_int_t preallocate);
