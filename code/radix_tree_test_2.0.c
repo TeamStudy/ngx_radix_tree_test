@@ -12,6 +12,8 @@
 #include <ext/hash_map>
 using namespace __gnu_cxx;
 
+#define TOTAL_TEST 1000000
+
 PHONE *phonepack=NULL;
 
 int secondsold, secondsnew, second;
@@ -34,14 +36,16 @@ void test_init()
 	for(int j=0;j<TOTAL_TEST;j++)
 	{
 		phonepack[j].phonebook=0;
-		phonepack[j].list=NULL;
+		phonepack[j].next=NULL;
+		phonepack[j].value=NULL;
 	}
 	int phonecell;
-	char phone[10];
+	char phone[11];
 	char add[10];
 
+	int z=1;
 	memset(phone, 0, sizeof(phone));
-	//int z=1;
+	sprintf(phone,"%d",z);
 	srand((unsigned)time(NULL));
 	for(int jj=0;jj<TOTAL_TEST;jj++)
 	{
@@ -53,7 +57,7 @@ void test_init()
 		}
 		phonepack[jj].phonebook=atoll(phone);
 		memset(phone, 0, sizeof(phone));
-		//sprintf(phone,"%d",z);
+		sprintf(phone,"%d",z);
 	}
 	/*输出前50个看看*/
 	printf("********top 50 of the list********\n");
@@ -101,11 +105,9 @@ void test_radix32tree()
 		{
 			printf("insert num: %d\n",num+1);
 		}
-		unsigned int phonenum=(phonepack[num].phonebook)%MY_INT_MAX;
-		//printf("phonenum:%u\n",phonenum);
 
 		/*基数树插入*/
-		err=ngx_radix32tree_insert(radixTree, phonenum, MASK_10,(unsigned int*)&(phonepack[num]));
+		err=ngx_radix32tree_my_insert(radixTree, phonepack[num].phonebook, MASK_10,(ngx_uint_ptr_t)&phonepack[num],(VALUE_TYPE)(phonepack[num].value));
 		if(err!=NGX_OK)
 		{
 			printf("insert error:%d  phonenum:%lld\n",err,phonepack[num].phonebook);
@@ -158,10 +160,11 @@ int main()
 	BUFF_NODE *pool=NULL;
 	radixTree=ngx_radix_tree_create(pool,-1);
 	radixTree_64=ngx_radix_64tree_create(pool,-1);
-	if(radixTree==NULL)
+	if(radixTree==NULL||radixTree_64==NULL)
 	{
 		printf("fail to creat tree!");
 	}
+	printf("complite!\n");
 
 	time_start();
 
