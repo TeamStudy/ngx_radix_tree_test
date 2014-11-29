@@ -194,8 +194,10 @@ ngx_int_t ngx_radix32tree_init_insert(ngx_radix_tree_t *tree, ngx_uint_t key, ng
     return NGX_OK;
 }
 
-ngx_int_t ngx_radix32tree_insert(ngx_radix_tree_t *tree, ngx_64_int key_long, ngx_uint_t mask,ngx_uint_ptr_t ptr_struct)
+ngx_int_t ngx_radix32tree_insert(ngx_radix_tree_t *tree, ngx_64_int key_long, ngx_uint_t mask,ngx_uint_ptr_t ptr_struct, VALUE_TYPE value)
 {
+	PHONE* key_new=(PHONE*)ptr_struct;
+	key_new->value = value;
 	ngx_uint_t key = key_long % MY_INT_MAX;
 	ngx_uint_t bit;
     static int renum=1;
@@ -232,7 +234,6 @@ ngx_int_t ngx_radix32tree_insert(ngx_radix_tree_t *tree, ngx_64_int key_long, ng
         if (node->value != NGX_RADIX_NO_VALUE)
         {
         	PHONE* key_old=(PHONE*)(node->value);
-        	PHONE* key_new=(PHONE*)ptr_struct;
         	if(key_old->phonebook==key_long)
         	{
         		printf("repeat phone! num:%d \n",re);
@@ -302,7 +303,7 @@ ngx_int_t ngx_radix32tree_my_insert(ngx_radix_tree_t *tree,ngx_64_int key_long_w
 {
 	ngx_64_int key_long = phone_11_to_10(key_long_with1);
 
-	ngx_int_t err = ngx_radix32tree_insert(tree, key_long, mask,ptr_struct);
+	ngx_int_t err = ngx_radix32tree_insert(tree, key_long, mask,ptr_struct,value);
 	return err;
 }
 
