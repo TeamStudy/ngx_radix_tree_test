@@ -234,7 +234,7 @@ ngx_int_t ngx_radix32tree_insert(ngx_radix_tree_t *tree, ngx_64_int key_long, ng
         if (node->value != NGX_RADIX_NO_VALUE)
         {
         	PHONE* key_old=(PHONE*)(node->value);
-        	if(key_old->phonebook==key_long)
+        	if(key_old->phonebook==key_new->phonebook)
         	{
         		printf("repeat phone! num:%d \n",re);
         		re++;
@@ -243,7 +243,7 @@ ngx_int_t ngx_radix32tree_insert(ngx_radix_tree_t *tree, ngx_64_int key_long, ng
         	}
         	else
         	{
-        		printf("repeat!  num:%d  phone:%lld\n",renum,key_long);
+        		printf("repeat!  num:%d  phone:%lld\n",renum,key_new->phonebook);
         		renum++;
         		if(key_old->next==NULL)
         		{

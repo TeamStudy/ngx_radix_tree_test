@@ -28,7 +28,9 @@ ngx_radix_tree_t *ngx_radix_64tree_create(BUFF_NODE *pool,
     int preallocate);
 
 int ngx_radix64tree_insert(ngx_radix_tree_t *tree,
-		ngx_64_int key, ngx_64_int mask, unsigned int* value);
+		ngx_64_int key, ngx_64_int mask, ngx_uint_ptr_t ptr_struct, VALUE_TYPE value);
+int ngx_radix64tree_insert_init(ngx_radix_tree_t *tree,
+		ngx_64_int key, ngx_64_int mask, ngx_uint_ptr_t ptr_struct);
 int ngx_radix64tree_delete(ngx_radix_tree_t *tree,
 		ngx_64_int key, ngx_64_int mask);
 unsigned int* ngx_radix64tree_find(ngx_radix_tree_t *tree, ngx_64_int key);

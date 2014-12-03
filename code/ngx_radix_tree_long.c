@@ -99,7 +99,7 @@ ngx_radix_tree_t * ngx_radix_64tree_create(BUFF_NODE *pool, int preallocate)
         mask |= 0x0000000000000001LL;
 
         do {
-            if (ngx_radix64tree_insert(tree, key, mask, NGX_RADIX_NO_VALUE)
+            if (ngx_radix64tree_insert_init(tree, key, mask, NGX_RADIX_NO_VALUE)
                 != NGX_OK)
             {
                 return NULL;
@@ -116,12 +116,13 @@ ngx_radix_tree_t * ngx_radix_64tree_create(BUFF_NODE *pool, int preallocate)
 }
 
 
-int ngx_radix64tree_insert(ngx_radix_tree_t *tree, ngx_64_int key, ngx_64_int mask, ngx_uint_ptr_t value)
+int ngx_radix64tree_insert(ngx_radix_tree_t *tree, ngx_64_int key, ngx_64_int mask, ngx_uint_ptr_t ptr_struct, VALUE_TYPE value)
 {
 	ngx_64_int           bit;
     static int renum=1;
     ngx_radix_node_t  *node, *next;
-    PHONE* phone_key=(PHONE*)value;
+    PHONE* phone_new=(PHONE*)ptr_struct;
+    phone_new->value = value;
     bit = 0x0000000000000001LL;
 
     node = tree->root;
@@ -151,12 +152,13 @@ int ngx_radix64tree_insert(ngx_radix_tree_t *tree, ngx_64_int key, ngx_64_int ma
     {
         if (node->value != NGX_RADIX_NO_VALUE)
         {
-        	printf("repeat phone! num:%d  phone:%lld\n",renum,phone_key->phonebook);
+        	PHONE* phone_old=(PHONE*)(node->value);
+        	printf("repeat phone! num:%d  old_phone:%lld   new_phone:%lld\n",renum,phone_old->phonebook,phone_new->phonebook);
         	renum++;
         	return NGX_OK;
         }
 
-        node->value = value;
+        node->value = ptr_struct;
         return NGX_OK;
     }
 
@@ -187,7 +189,80 @@ int ngx_radix64tree_insert(ngx_radix_tree_t *tree, ngx_64_int key, ngx_64_int ma
         node = next;
     }
 
-    node->value = value;
+    node->value = ptr_struct;
+
+    return NGX_OK;
+}
+
+int ngx_radix64tree_insert_init(ngx_radix_tree_t *tree, ngx_64_int key, ngx_64_int mask, ngx_uint_ptr_t ptr_struct)
+{
+	ngx_64_int           bit;
+    static int renum=1;
+    ngx_radix_node_t  *node, *next;
+    bit = 0x0000000000000001LL;
+
+    node = tree->root;
+    next = tree->root;
+
+    while (bit & mask)
+    {
+        if (key & bit)
+        {
+            next = node->right;
+        }
+        else
+        {
+            next = node->left;
+        }
+
+        if (next == NULL)
+        {
+            break;
+        }
+
+        bit <<= 1;
+        node = next;
+    }
+
+    if (next)
+    {
+        if (node->value != NGX_RADIX_NO_VALUE)
+        {
+        	return NGX_BUSY;
+        }
+
+        node->value = ptr_struct;
+        return NGX_OK;
+    }
+
+    while (bit & mask)
+    {
+        next = ngx_radix_alloc(tree);
+        if(next == NULL)
+        {
+        	//next = ngx_radix_alloc(tree);
+            return NGX_ERROR;
+        }
+
+        next->right = NULL;
+        next->left = NULL;
+        next->parent = node;
+        next->value = NGX_RADIX_NO_VALUE;
+
+        if (key & bit)
+        {
+            node->right = next;
+        }
+        else
+        {
+            node->left = next;
+        }
+
+        bit <<= 1;
+        node = next;
+    }
+
+    node->value = ptr_struct;
 
     return NGX_OK;
 }

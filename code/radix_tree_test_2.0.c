@@ -127,7 +127,8 @@ void test_radix64tree()
 			}
 
 			/*»ùÊýÊ÷²åÈë*/
-			err=ngx_radix64tree_insert(radixTree_64, phonepack[num].phonebook, MASK_LONG_10,(unsigned int*)&(phonepack[num]));
+			ngx_64_int phone_10 = phone_11_to_10(phonepack[num].phonebook);
+			err=ngx_radix64tree_insert(radixTree_64, phone_10, MASK_LONG_10,(ngx_uint_ptr_t)&(phonepack[num]),(VALUE_TYPE)(phonepack[num].value));
 			if(err!=NGX_OK)
 			{
 				printf("insert error:%d  phonenum:%lld\n",err,phonepack[num].phonebook);
