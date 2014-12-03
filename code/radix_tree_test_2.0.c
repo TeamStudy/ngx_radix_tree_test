@@ -40,7 +40,7 @@ void test_init()
 		phonepack[j].value=NULL;
 	}
 	int phonecell;
-	char phone[11];
+	char phone[12];
 	char add[10];
 
 	int z=1;
@@ -87,7 +87,7 @@ void time_end()
 	second=secondsnew-secondsold;
 	minisecond=minisecondsnew-minisecondsold;
 
-	if(minisecond>0)
+	if(minisecond>=0)
 		printf("time total:%d.%ds\n",second,minisecond);
 	else
 	{

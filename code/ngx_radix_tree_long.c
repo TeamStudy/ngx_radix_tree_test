@@ -39,7 +39,7 @@ ngx_radix_tree_t * ngx_radix_64tree_create(BUFF_NODE *pool, int preallocate)
 	ngx_64_int           key, mask, inc;
     ngx_radix_tree_t  *tree;
 
-    tree = ngx_palloc1(pool, sizeof(ngx_radix_tree_t));
+    tree = ngx_palloc_tree(pool, sizeof(ngx_radix_tree_t));
     if (tree == NULL) {
         return NULL;
     }

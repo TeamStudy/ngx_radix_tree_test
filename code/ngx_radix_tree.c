@@ -157,7 +157,7 @@ ngx_int_t ngx_radix32tree_init_insert(ngx_radix_tree_t *tree, ngx_uint_t key, ng
         	return NGX_BUSY;
         }
 
-        node->value = value;
+        node->value = ptr_struct;
 
         return NGX_OK;
     }
@@ -189,7 +189,7 @@ ngx_int_t ngx_radix32tree_init_insert(ngx_radix_tree_t *tree, ngx_uint_t key, ng
         node = next;
     }
 
-    node->value = value;
+    node->value = ptr_struct;
 
     return NGX_OK;
 }
@@ -309,11 +309,18 @@ ngx_int_t ngx_radix32tree_my_insert(ngx_radix_tree_t *tree,ngx_64_int key_long_w
 
 ngx_64_int phone_11_to_10(ngx_64_int key_long_with1)
 {
-	char phone_old[11];
+	char phone_old[12];
+	memset(phone_old, 0, sizeof(phone_old));
 	sprintf(phone_old,"%lld",key_long_with1);
-	char phone_new[10];
+
+	char phone_new[11];
+	memset(phone_new, 0, sizeof(phone_new));
 	strncpy(phone_new,phone_old+1,10);
-	ngx_64_int key_long = atoll(phone_new);
+
+	ngx_64_int key_long = 0;
+	key_long = atoll(phone_new);
+	//printf("%lld\n",key_long);
+
 	return key_long;
 }
 
@@ -356,7 +363,7 @@ ngx_int_t ngx_radix32tree_delete(ngx_radix_tree_t *tree, ngx_64_int key_long, ng
         	{
         		if(phone->next)
         		{
-        			node->value=phone->next;
+        			node->value=(ngx_uint_ptr_t)&(phone->next);
         			free(phone);
         			phone=NULL;
         			return NGX_OK;
@@ -407,7 +414,7 @@ ngx_int_t ngx_radix32tree_delete(ngx_radix_tree_t *tree, ngx_64_int key_long, ng
     	{
     		if(phone->next)
     		{
-    			node->value=phone->next;
+    			node->value=(ngx_uint_ptr_t)&(phone->next);
     			free(phone);
     			phone=NULL;
     			return NGX_OK;
@@ -428,7 +435,7 @@ ngx_int_t ngx_radix32tree_delete(ngx_radix_tree_t *tree, ngx_64_int key_long, ng
     		        tree->free = node;
     		        node = node->parent;
     		        free(tree->free);
-    		        tree->free=NUll;
+    		        tree->free=NULL;
 
     		        if (node->right || node->left)
     		        {
